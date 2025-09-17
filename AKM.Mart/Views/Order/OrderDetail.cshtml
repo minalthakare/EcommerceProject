@@ -1,0 +1,218 @@
+﻿@model ModelClasses.Summary_Model.SummaryVM
+
+<div class="PaddingAll bg-dark" style="border:1px solid red">
+    <form asp-action="Summary" asp-controller="Order" method="post">
+        <!-- Hidden input for CartUserId -->
+        <input asp-for="CartUserId" type="hidden" />
+
+
+        <div class="row">
+            <!-- Customer Details Section -->
+            <div class="col-lg-6 col-md-5 col-sm-12 p-2">
+                <div class="p-2 bg-secondary text-white fw-bold sadowingBorder">
+                    <h6 class="text-info">Customer Details</h6>
+                    <hr />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Name -->
+                    <div class="row mb-2">
+                        <div class="col-5">
+                            <label asp-for="OrderSummary.Name"></label>
+                        </div>
+                        <div class="col-7">
+                            <input asp-for="OrderSummary.Name" class="form-control" />
+                            <span asp-validation-for="OrderSummary.Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="row mb-2">
+                        <div class="col-5">
+                            <label asp-for="OrderSummary.PhoneNumber"></label>
+                        </div>
+                        <div class="col-7">
+                            <input asp-for="OrderSummary.PhoneNumber" class="form-control" required />
+                            <span asp-validation-for="OrderSummary.PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address -->
+                    <div class="row mb-2">
+                        <div class="col-5">
+                            <label asp-for="OrderSummary.DeliveryAddress"></label>
+                        </div>
+                        <div class="col-7">
+                            <input asp-for="OrderSummary.DeliveryAddress" class="form-control" />
+                            <span asp-validation-for="OrderSummary.DeliveryAddress" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- City -->
+                    <div class="row mb-2">
+                        <div class="col-5">
+                            <label asp-for="OrderSummary.City"></label>
+                        </div>
+                        <div class="col-7">
+                            <input asp-for="OrderSummary.City" class="form-control" />
+                            <span asp-validation-for="OrderSummary.City" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- State -->
+                    <div class="row mb-2">
+                        <div class="col-5">
+                            <label asp-for="OrderSummary.State"></label>
+                        </div>
+                        <div class="col-7">
+                            <input asp-for="OrderSummary.State" class="form-control" />
+                            <span asp-validation-for="OrderSummary.State" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Postal Code -->
+                    <div class="row mb-2">
+                        <div class="col-5">
+                            <label asp-for="OrderSummary.PostalCode"></label>
+                        </div>
+                        <div class="col-7">
+                            <input asp-for="OrderSummary.PostalCode" class="form-control" required />
+                            <span asp-validation-for="OrderSummary.PostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Date of Order (Hidden) -->
+                    <input asp-for="OrderSummary.DateOfOrder" type="hidden" value="@DateTime.Now" />
+                </div>
+            </div>
+
+            <!-- Shopping Cart Details Section -->
+            <div class="col-lg-6 col-md-7 col-sm-12 p-2">
+                <div class="p-2 bg-white sadowingBorder">
+                    <h6 class="text-info">Shopping Cart Details</h6>
+                    <hr />
+
+                    @{
+                        double totalOrderPrice = 0.0;
+                    }
+
+                    @foreach (var item in Model.UserCartList)
+                    {
+                        <div class="row border-start-0">
+                            <div class="col-5">
+                                @(item.product != null ? item.product.Name : "Unknown Product")
+                            </div>
+                            <div class="col-4 text-start">
+                                @if (item.product != null)
+                                {
+                                    <label class="font-weight-bold">@item.Quantity pcs * ₹@item.product.Price</label>
+                                }
+                                else
+                                {
+                                    <label class="font-weight-bold text-danger">Product Not Found</label>
+                                }
+                            </div>
+
+                            @{
+                                double itemTotal = item.product != null ? item.Quantity * item.product.Price : 0;
+                                totalOrderPrice += itemTotal;
+                            }
+                            <div class="col-3 text-right">
+                                <label class="font-weight-bold">₹@Math.Round(itemTotal, 2)</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Price Section -->
+        <div class="row bg-warning p-2 sadowingBorder">
+            <div class="col-12 text-end">
+                <!-- Subtotal -->
+                <div class="row pb-1">
+                    <div class="col-6">
+                        <label>Subtotal:</label>
+                    </div>
+                    <div class="col-6">
+                        <strong>
+                            <input class="form-control text-info text-right font-weight-bold"
+                            value="₹@totalOrderPrice.ToString("N2")" readonly />
+                        </strong>
+                    </div>
+                </div>
+
+                <!-- GST Calculation -->
+                @{
+                    double gstRate = 18.0; // 18% GST
+                    double gstAmount = Math.Round((totalOrderPrice * gstRate) / 100, 2);
+                    Model.OrderSummary.TotalOrderAmount = gstAmount;
+                }
+                <div class="row pb-1">
+                    <div class="col-6">
+                        <label>GST (@gstRate%):</label>
+                    </div>
+                    <div class="col-6">
+                        <strong>
+                            <input class="form-control text-info text-right font-weight-bold"
+                                   value="₹@gstAmount.ToString("N2")" readonly />
+                        </strong>
+                    </div>
+                </div>
+
+                <!-- Total Bill -->
+                @{
+                    double totalBills = Math.Round(totalOrderPrice + gstAmount, 2);
+                    Model.OrderSummary.TotalOrderAmount = totalBills;
+                }
+                <div class="row pb-1">
+                    <div class="col-6">
+                        <label>Total Bill:</label>
+                    </div>
+                    <div class="col-6">
+                        <strong>
+                            <input class="form-control text-info text-right font-weight-bold"
+                                   id="totalBills"
+                                   asp-for="OrderSummary.TotalOrderAmount"
+                                   readonly />
+                        </strong>
+                    </div>
+                </div>
+
+                <!-- Payment Options -->
+                <div class="row pb-1">
+                    <div class="col-6">
+                        <label>Payment Options:</label>
+                    </div>
+                    <div class="col-6">
+                        <select id="chosePaymentMethod" class="form-control rounded-left">
+                            <option value="O" class="border-success">Please select</option>
+                            <option value="1" class="border-success">Cash</option>
+                            <option value="2" class="border-success">UPI / Net Banking</option>
+                            <option value="3" class="border-success">Credit Card</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="CreditPayWarning" style="display:none">
+                    <p class="text-danger">
+                        If you pay by credit card, a 2.9% + ₹0.30 fee will be applied to your order.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Submit Order</button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+

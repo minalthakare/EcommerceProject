@@ -1,0 +1,114 @@
+﻿@model ModelClasses.Category
+
+@{
+    var actionItem = "Create";
+}
+
+@if (TempData["AlertMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="btn-close text-dark" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&otimes;</span></button>
+        @TempData["AlertMessage"]
+    </div>
+}
+
+@if (Model != null)
+{
+    actionItem = "Edit";
+}
+
+
+<div class="PaddingAll">
+    <h2 class="text-info">@actionItem a Category</h2>
+    <hr />
+    <div class="PaddingAllWhite">
+        <div class="row">
+            <div class="col-12 p-3">
+                <form asp-action="Upsert" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-1">
+                        </div>
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col-3 form-group">
+                                    <label class="text-info" asp-for="Name"></label>
+                                </div>
+                                <div class="col-9 form-group">
+                                    <input asp-for="Name" class="form-control" placeholder="Max 30 characters" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="offset-3 col-lg-4 col-sm-8 form-group mt-3">
+                                    <a asp-action="Index" class="btn btn-primary form-control">Go Back To List</a>
+                                </div>
+                                <div class="offset-3 col-lg-4 col-md-4 col-sm-8 form-group mt-3">
+                                    <button type="submit" class="btn btn-success form-control">@actionItem</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+@* @model ModelClasses.Category *@
+
+@* @{ *@
+@*     var actionItem = Model != null ? "Edit" : "Create"; *@
+@* } *@
+
+@* <div class="PaddingAll"> *@
+@*     <h2 class="text-info">@actionItem a Category</h2> *@
+@*     <hr /> *@
+@*     <div class="PaddingAllWhite"> *@
+@*         <div class="row"> *@
+@*             <div class="col-12 p-3"> *@
+@*                 <form asp-action="Upsert" method="post"> *@
+@*                     <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+@*                     <div class="row"> *@
+@*                         <div class="col-1"></div> *@
+@*                         <div class="col-10"> *@
+@*                             <div class="row"> *@
+@*                                 <div class="col-3 form-group"> *@
+@*                                     <label asp-for="Name" class="text-info"></label> *@
+@*                                 </div> *@
+@*                                 <div class="col-9 form-group"> *@
+@*                                     <input asp-for="Name" class="form-control" placeholder="Max 30 characters" /> *@
+@*                                     <span asp-validation-for="Name" class="text-danger"></span> *@
+@*                                 </div> *@
+@*                             </div> *@
+@*                             <div class="row mt-3" > *@
+@*                                 <div class="offset-3 col-lg-4 col-sm-8 form-group mt-3"> *@
+@*                                     <a asp-action="Index" class="btn btn-primary form-control">Go Back To List</a> *@
+@*                                 </div> *@
+@*                                 <div class="offset-3 col-lg-4 col-md-4 col-sm-8 form-group mt-3"> *@
+@*                                     <button type="submit" class="btn btn-success form-control">@actionItem</button> *@
+@*                                 </div> *@
+@*                             </div> *@
+@*                         </div> *@
+@*                         <div class="col-1"></div> *@
+@*                     </div> *@
+@*                 </form> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
+@* @section Scripts { *@
+@*     @{ *@
+@*         await Html.RenderPartialAsync("_ValidationScriptsPartial"); *@
+@*     } *@
+@* } *@

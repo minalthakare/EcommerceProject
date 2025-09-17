@@ -1,0 +1,100 @@
+﻿@model IEnumerable<ModelClasses.Product>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="~/css/CommonIndexStyle.css" asp-append-version="true">
+    <style>
+        body {
+            background-image: url('/MainImages/pexels-moose-photos-170195-1037993.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .glass-container {
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+
+        .table-hover tbody tr:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-custom {
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="glass-container">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h2 class="text-white">Product List</h2>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a asp-action="Create" asp-controller="Product" class="btn btn-primary btn-custom">Create Product</a>
+                </div>
+            </div>
+            <hr />
+            <div class="table-responsive">
+                @if (Model != null && Model.Any())
+
+                {
+                    <table class="table table-bordered table-hover text-white">
+                        <thead class="bg-dark text-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>₹@item.Price</td>
+                                    <td>@Html.Raw(item.Description)</td>
+                                    <td>@item.Category.Name</td>
+                                    <td>
+                                        <img src="~/Images/@(string.IsNullOrEmpty(item.HomeImgUrl) ? "noimage.png" : item.HomeImgUrl)" class="rounded img-fluid" width="120" height="80" />
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id" class="btn btn-outline-success btn-custom">Edit</a>
+                                        <a onclick="Delete('/Product/Delete/@item.Id')" class="btn btn-outline-danger btn-custom">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <h3 class="text-warning text-center">No Products Available</h3>
+                }
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="~/js/Product.js"></script>
+    }
+</body>
+</html>

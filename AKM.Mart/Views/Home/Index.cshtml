@@ -1,0 +1,136 @@
+﻿@model ModelClasses.ViewModel.HomePageVM
+
+<!-- Search Bar -->
+<div class="search-bar bg-gradient p-3 rounded shadow-sm text-center">
+    <form asp-action="Index" method="get" class="d-flex justify-content-center">
+        <input type="text" name="searchByName" class="form-control me-2 w-50" placeholder="🔍 Search for products..." value="@Context.Request.Query["searchByName"]" />
+        <button type="submit" class="btn btn-primary px-4">Search</button>
+    </form>
+</div>
+
+<div class="row mt-4">
+    <!-- Category Sidebar -->
+    <div class="col-md-3 d-none d-md-block">
+        <div class="category-sidebar p-4 bg-white rounded shadow-sm">
+            <h5 class="text-dark fw-bold text-center">📂 Categories</h5>
+            <hr />
+            @if (Model.CategoryList.Any())
+            {
+                <ul class="list-unstyled">
+                    @foreach (var item in Model.CategoryList)
+                    {
+                        <li class="mb-2">
+                            <a asp-action="Index" asp-route-searchByCategory="@item.Name" class="text-dark fw-bold d-block p-2 rounded hover-bg">
+                                <i class="fas fa-angle-right text-primary"></i> @item.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="col-md-9">
+        <div class="row">
+            @if (Model.ProductList.Any())
+            {
+                @foreach (var item in Model.ProductList)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="product-card card border-0 shadow-sm rounded">
+                            <div class="position-relative">
+                                <!-- Click Image to Filter by Category -->
+                                <a asp-action="Index" asp-route-searchByCategory="@item.Category.Name">
+                                    <img src="~/Images/@item.HomeImgUrl" class="card-img-top rounded-top" style="height: 250px; object-fit: cover;" />
+                                </a>
+                                <div class="price-tag bg-primary text-white fw-bold p-2 rounded-end position-absolute top-0 start-0">
+                                    ₹@item.Price
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <h6 class="fw-bold text-dark">@item.Name</h6>
+                                <button class="btn btn-success btn-sm add-to-cart mt-2 px-3" data-id="@item.Id">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center text-muted w-100">No products found matching your search.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .search-bar {
+        background: linear-gradient(135deg, #007bff, #6610f2);
+        color: white;
+    }
+
+    .category-sidebar {
+        background: #f8f9fa;
+        border-left: 4px solid #007bff;
+    }
+
+    .hover-bg:hover {
+        background: #007bff;
+        color: white !important;
+    }
+
+    .product-card {
+        transition: 0.3s ease-in-out;
+    }
+
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .price-tag {
+        font-size: 14px;
+    }
+
+    .add-to-cart {
+        transition: 0.3s ease-in-out;
+    }
+
+        .add-to-cart:hover {
+            background: #28a745;
+            transform: translateY(-2px);
+        }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function isAuthenticated() {
+            return @User.Identity.IsAuthenticated.ToString().ToLower();
+        }
+        $(".add-to-cart").click(function (e) {
+            e.preventDefault();
+            var productId = $(this).data("id");
+            if (!isAuthenticated()) {
+                alert("🔒 Please log in to add items to the cart.");
+                window.location.href = "/Account/Login";
+                return;
+            }
+            $.ajax({
+                url: "/Cart/AddToCart",
+                type: "POST",
+                data: { productId: productId },
+                success: function () {
+                    alert("🛍 Added to cart successfully!");
+                    window.location.href = "/Cart/CartIndex";
+                },
+                error: function () {
+                    alert("❌ Error while adding to cart.");
+                }
+            });
+        });
+    });
+</script>

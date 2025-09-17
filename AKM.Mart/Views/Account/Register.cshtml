@@ -1,0 +1,82 @@
+﻿@model ModelClasses.Account.RegisterVM
+
+<div class="text-center d-flex justify-content-center vh-100 align-items-center position-relative"
+     style="background-image: url('/MainImages/pexels-moose-photos-170195-1037993.jpg');
+           background-size: cover; background-repeat: no-repeat; background-position: center;">
+
+    <div class="row p-4 rounded-3 shadow-lg position-relative w-75"
+         style="backdrop-filter: blur(15px); background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
+
+        <!-- Registration Form -->
+        <div class="col-lg-8 col-md-12 col-sm-12 p-4 rounded-3 border-0"
+             style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.3); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-radius: 15px;">
+
+            <h2 class="text-center text-uppercase text-dark fw-bold">Create a New Account</h2>
+            <hr />
+
+            <form asp-action="Register" asp-controller="Account" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row p-2">
+                    <div class="col-lg-6 col-md-12 col-sm-12 pb-2">
+                        <input asp-for="applicationUser.FirstName" class="rounded-pill form-control text-dark border-1 border-light shadow-sm bg-white bg-opacity-75" placeholder="First Name" />
+                        <span asp-validation-for="applicationUser.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 pb-2">
+                        <input asp-for="applicationUser.LastName" class="rounded-pill form-control text-dark border-1 border-light shadow-sm bg-white bg-opacity-75" placeholder="Last Name" />
+                        <span asp-validation-for="applicationUser.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row p-2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 pb-2">
+                        <input asp-for="UserName" class="rounded-pill form-control text-dark border-1 border-light shadow-sm bg-white bg-opacity-75" placeholder="Username" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row p-2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 pb-2">
+                        <input asp-for="Email" class="rounded-pill form-control text-dark border-1 border-light shadow-sm bg-white bg-opacity-75" placeholder="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row p-2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 pb-2">
+                        <input asp-for="applicationUser.Address" class="rounded-pill form-control text-dark border-1 border-light shadow-sm bg-white bg-opacity-75" placeholder="Address" />
+                        <span asp-validation-for="applicationUser.Address" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row p-2">
+                    <div class="col-lg-6 col-md-12 col-sm-12 pb-2">
+                        <input asp-for="Password" type="password" class="rounded-pill form-control text-dark border-1 border-light shadow-sm bg-white bg-opacity-75" placeholder="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 pb-2">
+                        <input asp-for="ConfirmPassword" type="password" class="rounded-pill form-control text-dark border-1 border-light shadow-sm bg-white bg-opacity-75" placeholder="Confirm Password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow">Register</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Already Have an Account Section -->
+        <div class="col-lg-4 col-md-12 col-sm-12 p-4 rounded-3 border-0 text-center mt-lg-0 mt-3"
+             style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.4); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-radius: 15px;">
+            <h6 class="text-dark">Already have an account? Click below to login</h6>
+            <a asp-action="Login" class="btn btn-outline-primary rounded-pill px-4 mt-3 shadow-sm"><strong>Login</strong></a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

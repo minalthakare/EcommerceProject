@@ -1,0 +1,77 @@
+﻿@model ModelClasses.ViewModel.CartIndexVM
+
+@if (Model.CartList.Count() > 0)
+{
+    <div class="d-flex justify-content-center vh-100 align-items-center position-relative"
+         style="background-image: url('/MainImages/pexels-moose-photos-170195-1037993.jpg');
+                background-size: cover; background-repeat: no-repeat; background-position: center;">
+        <div class="p-4 rounded-3 shadow-lg position-relative w-75"
+             style="backdrop-filter: blur(15px); background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);">
+
+            <h4 class="text-dark text-center pb-2 fw-bold">Your Cart Items</h4>
+            <div class="p-3 rounded-3 border-0"
+                 style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.3); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-radius: 15px;">
+                <table class="table table-hover table-borderless text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CartList)
+                        {
+                            <tr class="align-middle">
+                                <td>
+                                    <a asp-action="Details" asp-controller="Home" asp-route-Id="@item.product.Id">
+                                        <img src="~/Images/@item.product.HomeImgUrl" height="80" width="80" class="rounded shadow-sm" />
+                                    </a>
+                                </td>
+                                <td>@item.product.Name</td>
+                                <td>
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        <a asp-action="AddToCart" asp-controller="Cart" asp-route-productId="@item.ProductId"
+                                           asp-route-returnUrl="Yes" class="btn btn-outline-success btn-sm rounded-pill shadow-sm">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                        <strong class="px-2">@item.Quantity</strong>
+                                        <a asp-action="MinusItem" asp-route-productId="@item.ProductId"
+                                           class="btn btn-outline-warning btn-sm rounded-pill shadow-sm">
+                                            <i class="fas fa-minus"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-action="DeleteItem" asp-route-productId="@item.ProductId"
+                                       class="btn btn-outline-danger btn-sm rounded-pill shadow-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @*  <div class="text-end">
+                    <a asp-action="Summary" asp-controller="Order" aps-route-id="@Model.ProductList.FirstOrDefault().UserId" class="btn btn-success">Order Requesting</a>
+                </div> *@
+            </div>
+            <div class="text-center mt-3">
+                <a asp-action="OrderDetail" asp-controller="Order" asp-route-id="@Model.CartList.FirstOrDefault().UserId"
+                   class="btn btn-primary rounded-pill px-4 shadow">Proceed to Checkout</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center d-flex justify-content-center vh-100 align-items-center position-relative"
+         style="background-image: url('/MainImages/pexels-moose-photos-170195-1037993.jpg');
+                background-size: cover; background-repeat: no-repeat; background-position: center;">
+        <h2 class="text-warning font-weight-bold p-4 rounded shadow-lg"
+            style="backdrop-filter: blur(15px); background: rgba(255, 255, 255, 0.3);">
+            No items in the cart. Please add some!
+        </h2>
+    </div>
+}
